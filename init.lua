@@ -275,6 +275,7 @@ require('lazy').setup({
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
+    event = { 'BufReadPre', 'BufNewFile' },
     ---@module 'gitsigns'
     ---@type Gitsigns.Config
     ---@diagnostic disable-next-line: missing-fields
@@ -286,6 +287,16 @@ require('lazy').setup({
         topdelete = { text = '‾' }, ---@diagnostic disable-line: missing-fields
         changedelete = { text = '~' }, ---@diagnostic disable-line: missing-fields
       },
+      on_attach = function(bufnr)
+        local gitsigns = require 'gitsigns'
+        local map = function(mode, lhs, rhs, desc) vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc }) end
+
+        map('n', ']h', gitsigns.next_hunk, 'Next Git hunk')
+        map('n', '[h', gitsigns.prev_hunk, 'Previous Git hunk')
+        map('n', '<leader>hp', gitsigns.preview_hunk, 'Preview Git hunk')
+        map('n', '<leader>hr', gitsigns.reset_hunk, 'Reset Git hunk')
+        map('n', '<leader>hb', gitsigns.blame_line, 'Git blame line')
+      end,
     },
   },
 
