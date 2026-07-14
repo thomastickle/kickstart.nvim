@@ -783,26 +783,26 @@ end
 do
   -- [[ Formatting ]]
   vim.pack.add { gh 'stevearc/conform.nvim' }
+  local format_on_save_filetypes = {
+    c = true,
+    cpp = true,
+    css = true,
+    html = true,
+    javascript = true,
+    javascriptreact = true,
+    kotlin = true,
+    lua = true,
+    perl = true,
+    python = true,
+    rust = true,
+    typescript = true,
+    typescriptreact = true,
+  }
+
   require('conform').setup {
     notify_on_error = false,
     format_on_save = function(bufnr)
-      -- You can specify filetypes to autoformat on save here:
-      local enabled_filetypes = {
-        c = true,
-        cpp = true,
-        css = true,
-        html = true,
-        javascript = true,
-        javascriptreact = true,
-        kotlin = true,
-        lua = true,
-        perl = true,
-        python = true,
-        rust = true,
-        typescript = true,
-        typescriptreact = true,
-      }
-      if enabled_filetypes[vim.bo[bufnr].filetype] then
+      if format_on_save_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 1000, lsp_format = 'fallback' }
       else
         return nil
@@ -828,6 +828,31 @@ do
       typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
     },
   }
+
+  vim.api.nvim_create_autocmd('BufWritePre', {
+    group = vim.api.nvim_create_augroup('personalized-save-cleanup', { clear = true }),
+    callback = function(args)
+      if not format_on_save_filetypes[vim.bo[args.buf].filetype] then return end
+
+      local lines = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false)
+      local changed = false
+      for index, line in ipairs(lines) do
+        local trimmed = line:gsub('%s+$', '')
+        if trimmed ~= line then
+          lines[index] = trimmed
+          changed = true
+        end
+      end
+      while #lines > 1 and lines[#lines] == '' do
+        table.remove(lines)
+        changed = true
+      end
+      if changed then vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, lines) end
+
+      vim.bo[args.buf].fixendofline = true
+      vim.bo[args.buf].endofline = true
+    end,
+  })
 
   vim.keymap.set({ 'n', 'v' }, '<leader>f', function() require('conform').format { async = true } end, { desc = '[F]ormat buffer' })
 end
