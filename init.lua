@@ -343,7 +343,20 @@ require('lazy').setup({
     -- it’s best to remove the Telescope plugin config entirely
     -- instead of just disabling it here, to keep your config clean.
     enabled = true,
-    event = 'VimEnter',
+    cmd = 'Telescope',
+    keys = {
+      { '<leader>sh', '<cmd>Telescope help_tags<CR>', desc = '[S]earch [H]elp' },
+      { '<leader>sk', '<cmd>Telescope keymaps<CR>', desc = '[S]earch [K]eymaps' },
+      { '<leader>sf', '<cmd>Telescope find_files<CR>', desc = '[S]earch [F]iles' },
+      { '<leader>ss', '<cmd>Telescope builtin<CR>', desc = '[S]earch [S]elect Telescope' },
+      { '<leader>sw', '<cmd>Telescope grep_string<CR>', desc = '[S]earch current [W]ord', mode = { 'n', 'v' } },
+      { '<leader>sg', '<cmd>Telescope live_grep<CR>', desc = '[S]earch by [G]rep' },
+      { '<leader>sd', '<cmd>Telescope diagnostics<CR>', desc = '[S]earch [D]iagnostics' },
+      { '<leader>sr', '<cmd>Telescope resume<CR>', desc = '[S]earch [R]esume' },
+      { '<leader>s.', '<cmd>Telescope oldfiles<CR>', desc = '[S]earch Recent Files' },
+      { '<leader>sc', '<cmd>Telescope commands<CR>', desc = '[S]earch [C]ommands' },
+      { '<leader><leader>', '<cmd>Telescope buffers<CR>', desc = '[ ] Find existing buffers' },
+    },
     dependencies = {
       'nvim-lua/plenary.nvim',
       { -- If encountering errors, see telescope-fzf-native README for installation instructions
@@ -385,6 +398,9 @@ require('lazy').setup({
       -- [[ Configure Telescope ]]
       -- See `:help telescope` and `:help telescope.setup()`
       require('telescope').setup {
+        defaults = {
+          find_command = { 'fdfind', '--type', 'f', '--strip-cwd-prefix' },
+        },
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
