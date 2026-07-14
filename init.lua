@@ -788,8 +788,10 @@ do
     cpp = true,
     css = true,
     html = true,
+    java = true,
     javascript = true,
     javascriptreact = true,
+    json = true,
     kotlin = true,
     lua = true,
     perl = true,
@@ -797,6 +799,7 @@ do
     rust = true,
     typescript = true,
     typescriptreact = true,
+    yaml = true,
   }
 
   require('conform').setup {
