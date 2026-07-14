@@ -500,6 +500,9 @@ do
     --   },
     -- },
     -- pickers = {}
+    defaults = {
+      find_command = { 'fdfind', '--type', 'f', '--strip-cwd-prefix' },
+    },
     extensions = {
       ['ui-select'] = { require('telescope.themes').get_dropdown() },
     },
