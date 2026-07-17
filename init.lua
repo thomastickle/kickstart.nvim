@@ -704,6 +704,7 @@ do
     perlnavigator = {},
     pyright = {},
     rust_analyzer = {},
+    cspell_ls = {},
     vtsls = {},
     yamlls = {},
 
