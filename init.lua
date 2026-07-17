@@ -589,6 +589,19 @@ do
 end
 
 -- ============================================================
+-- PYTHON IMPORT MANAGEMENT
+-- Resolve missing imports and update imports after Python module moves
+-- ============================================================
+do
+  vim.pack.add {
+    gh 'MunifTanjim/nui.nvim',
+    gh 'alexpasmantier/pymple.nvim',
+  }
+
+  require('pymple').setup {}
+end
+
+-- ============================================================
 -- SECTION 6: LSP
 -- LSP keymaps, server configuration, Mason tools installations
 -- ============================================================
@@ -702,7 +715,15 @@ do
     jsonls = {},
     kotlin_lsp = { cmd = { 'intellij-server' } },
     perlnavigator = {},
-    pyright = {},
+    pyright = {
+      settings = {
+        python = {
+          analysis = {
+            autoImportCompletions = true,
+          },
+        },
+      },
+    },
     rust_analyzer = {},
     cspell_ls = {},
     vtsls = {},
