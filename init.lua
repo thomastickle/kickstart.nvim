@@ -598,7 +598,26 @@ do
     gh 'alexpasmantier/pymple.nvim',
   }
 
-  require('pymple').setup {}
+  require('pymple').setup {
+    logging = {
+      -- Logging is not required for pymple's import features, and an
+      -- unwritable data directory should not prevent Neovim from starting.
+      file = { enabled = false },
+    },
+  }
+
+  -- Pymple registers this mapping globally; replace it with a Python-only mapping.
+  pcall(vim.keymap.del, 'n', '<leader>li')
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'python',
+    group = vim.api.nvim_create_augroup('pymple-python-keymaps', { clear = true }),
+    callback = function(event)
+      vim.keymap.set('n', '<leader>li', require('pymple.api').resolve_import_under_cursor, {
+        buffer = event.buf,
+        desc = 'Resolve Python import under cursor',
+      })
+    end,
+  })
 end
 
 -- ============================================================
