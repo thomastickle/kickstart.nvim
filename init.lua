@@ -734,11 +734,13 @@ do
     jsonls = {},
     kotlin_lsp = { cmd = { 'intellij-server' } },
     perlnavigator = {},
-    pyright = {
+    basedpyright = {
       settings = {
-        python = {
+        basedpyright = {
           analysis = {
             autoImportCompletions = true,
+            diagnosticMode = 'workspace',
+            typeCheckingMode = 'basic',
           },
         },
       },
