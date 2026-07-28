@@ -440,6 +440,44 @@ do
   -- Set `use_icons` to true if you have a Nerd Font
   statusline.setup { use_icons = vim.g.have_nerd_font }
 
+  -- Use each filetype icon's color while keeping the surrounding file info unchanged.
+  if vim.g.have_nerd_font then
+    local default_section_fileinfo = statusline.section_fileinfo
+    local icon_highlight_cache = {}
+
+    local function get_icon_highlight(icon_highlight)
+      if icon_highlight_cache[icon_highlight] then return icon_highlight_cache[icon_highlight] end
+
+      local combined_highlight = 'MiniStatusline' .. icon_highlight
+      local icon_attributes = vim.api.nvim_get_hl(0, { name = icon_highlight, link = false })
+      local fileinfo_attributes = vim.api.nvim_get_hl(0, { name = 'MiniStatuslineFileinfo', link = false })
+      if icon_attributes.fg then fileinfo_attributes.fg = icon_attributes.fg end
+      vim.api.nvim_set_hl(0, combined_highlight, fileinfo_attributes)
+
+      icon_highlight_cache[icon_highlight] = combined_highlight
+      return combined_highlight
+    end
+
+    vim.api.nvim_create_autocmd('ColorScheme', {
+      group = vim.api.nvim_create_augroup('colored-statusline-filetype-icons', { clear = true }),
+      callback = function() icon_highlight_cache = {} end,
+    })
+
+    ---@diagnostic disable-next-line: duplicate-set-field
+    statusline.section_fileinfo = function(args)
+      local fileinfo = default_section_fileinfo(args)
+      local filetype = vim.bo.filetype
+      if filetype == '' then return fileinfo end
+
+      local icon, icon_highlight = MiniIcons.get('filetype', filetype)
+      local combined_highlight = get_icon_highlight(icon_highlight)
+      local uncolored = icon .. ' ' .. filetype
+      local colored = '%#' .. combined_highlight .. '#' .. icon .. '%#MiniStatuslineFileinfo# ' .. filetype
+
+      return fileinfo:gsub(vim.pesc(uncolored), function() return colored end, 1)
+    end
+  end
+
   -- You can configure sections in the statusline by overriding their
   -- default behavior. For example, here we set the section for
   -- cursor location to LINE:COLUMN
