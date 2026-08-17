@@ -770,7 +770,7 @@ do
     clangd = {},
     emmet_language_server = {},
     jsonls = {},
-    kotlin_lsp = { cmd = { 'intellij-server' } },
+    kotlin_lsp = {},
     perlnavigator = {},
     basedpyright = {
       settings = {
