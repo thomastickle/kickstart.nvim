@@ -1,5 +1,28 @@
 # kickstart.nvim
 
+## Thomas’s configuration
+
+The `personalized` branch contains my configuration; `master` tracks Kickstart.
+This configuration was last verified with **Neovim 0.12.6** and requires Neovim
+0.12 or newer because it uses the built-in `vim.pack` plugin manager.
+
+To use it on another machine, install Neovim and the external dependencies below,
+back up any existing Neovim configuration, then clone this branch:
+
+```sh
+git clone --branch personalized https://github.com/thomastickle/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}/nvim"
+nvim
+```
+
+The tracked `nvim-pack-lock.json` records the tested plugin revisions. On first
+launch, `vim.pack` installs those revisions; Mason installs the configured
+language servers and tools. Allow installation and native builds to finish.
+Neovim itself is installed separately and is not updated by this configuration.
+
+To update plugins intentionally, run `:lua vim.pack.update()`, review the proposed
+changes, then save and commit the updated lockfile after checking startup and
+editing in the languages you use. Restart Neovim after updating plugins.
+
 ## Introduction
 
 A starting point for Neovim that is:
